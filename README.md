@@ -1,73 +1,84 @@
-# React + TypeScript + Vite
+# Governed Workflow Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Screening prototype for **ABC Roofing LLC** — **2025 S-Corp CPA Review**. A clickable front-end demo that shows governed workflow transitions, CPA approval gates, missing-item/escalation visibility, and an append-only audit log. All state is local and deterministic (no backend).
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Layer | Technology |
+| --- | --- |
+| Build | [Vite](https://vitejs.dev/) |
+| UI | [React](https://react.dev/) 19 + [TypeScript](https://www.typescriptlang.org/) |
+| Styling | [Tailwind CSS](https://tailwindcss.com/) v4 |
+| Icons | [lucide-react](https://lucide.dev/) |
+| Unit / component tests | [Vitest](https://vitest.dev/) |
+| UI testing | [React Testing Library](https://testing-library.com/react) + [@testing-library/user-event](https://testing-library.com/docs/user-event/intro) |
+| Test environment | jsdom + [@testing-library/jest-dom](https://github.com/testing-library/jest-dom) |
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Node.js** 20+ (LTS recommended)
+- **npm** 10+ (comes with Node)
 
-## Expanding the ESLint configuration
+## Project setup
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Clone or open the repository, then install dependencies:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd governed-workflow-dashboard
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Running the app
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the Vite dev server (default: http://localhost:5173) |
+| `npm run build` | Type-check and build for production → `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | Run ESLint |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Example:
+
+```bash
+npm run dev
 ```
+
+Open the URL printed in the terminal to use the dashboard.
+
+## Tests
+
+| Command | Description |
+| --- | --- |
+| `npm run test` | Run all tests once (CI-friendly) |
+| `npm run test:watch` | Run tests in watch mode during development |
+
+Test layout:
+
+- `src/domain/workflow.test.ts` — domain logic (transitions, approval gate, readiness)
+- `src/App.test.tsx` — UI flows (dashboard, controls, blockers, audit log)
+
+Example:
+
+```bash
+npm run test
+```
+
+All tests should pass before submitting or deploying a build.
+
+## Project structure (high level)
+
+```
+src/
+  domain/           # workflow reducer, transitions, seed data
+  components/       # Dashboard, controls, issues, audit log, stepper
+  test/setup.ts     # Vitest / jest-dom setup
+  App.tsx           # root layout and useReducer wiring
+```
+
+## Demo context
+
+- **Client:** ABC Roofing LLC  
+- **Engagement:** 2025 S-Corp CPA Review  
+- **Workflow phases:** Intake Active → Document Review Active → CPA Review Pending → Filing Readiness Pending → Approved  
+
+Transitions are explicit and sequential; **Approved** requires recorded CPA approval. User actions append structured events to the audit log.
